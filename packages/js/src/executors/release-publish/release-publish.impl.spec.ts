@@ -7,13 +7,9 @@ import { execSync } from 'child_process';
 import { PublishExecutorSchema } from './schema';
 import runExecutor from './release-publish.impl';
 import * as npmConfigModule from '../../utils/npm-config';
-import * as npmRunPath from 'npm-run-path';
 import * as extractModule from './extract-npm-publish-json-data';
 
 jest.mock('child_process');
-jest.mock('npm-run-path', () => ({
-  env: jest.fn(() => ({})),
-}));
 jest.mock('../../utils/npm-config');
 jest.mock('@nx/devkit', () => ({
   ...jest.requireActual('@nx/devkit'),

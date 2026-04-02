@@ -1,4 +1,4 @@
-import { env as appendLocalEnv } from 'npm-run-path';
+import { getEnvWithLocalBinPaths } from '../../utils/env-with-local-bin-paths';
 import { combineOptionsForExecutor, Schema } from '../../utils/params';
 import { handleErrors } from '../../utils/handle-errors';
 import { handleImport } from '../../utils/handle-import';
@@ -119,11 +119,8 @@ async function printTargetRunHelpInternal(
   ) {
     const command = targetConfig.options.command.split(' ')[0];
     const helpCommand = `${command} --help`;
-    const localEnv = appendLocalEnv();
-    const env = {
-      ...process.env,
-      ...localEnv,
-    };
+    const env = getEnvWithLocalBinPaths();
+
     if (PseudoTerminal.isSupported()) {
       const terminal = createPseudoTerminal();
       await new Promise(() => {

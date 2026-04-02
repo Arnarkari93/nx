@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { env } from 'npm-run-path';
+import { getEnvWithLocalBinPaths as env } from '../../utils/env-with-local-bin-paths';
 import { relative } from 'path';
 import { dirSync, fileSync } from 'tmp';
 import runCommands, {
@@ -698,18 +698,12 @@ describe('Run Commands', () => {
       expect(exec).toHaveBeenCalledTimes(2);
       expect(exec).toHaveBeenNthCalledWith(1, `echo 'Hello World'`, {
         maxBuffer: LARGE_BUFFER,
-        env: {
-          ...process.env,
-          ...env(),
-        },
+        env: env(),
         windowsHide: true,
       });
       expect(exec).toHaveBeenNthCalledWith(2, `echo 'Hello Universe'`, {
         maxBuffer: LARGE_BUFFER,
-        env: {
-          ...process.env,
-          ...env(),
-        },
+        env: env(),
         windowsHide: true,
       });
     });
@@ -729,18 +723,13 @@ describe('Run Commands', () => {
       expect(exec).toHaveBeenCalledTimes(2);
       expect(exec).toHaveBeenNthCalledWith(1, `echo 'Hello World'`, {
         maxBuffer: LARGE_BUFFER,
-        env: {
-          ...process.env,
-          ...env(),
-        },
+        env: env(),
+
         windowsHide: true,
       });
       expect(exec).toHaveBeenNthCalledWith(2, `echo 'Hello Universe'`, {
         maxBuffer: LARGE_BUFFER,
-        env: {
-          ...process.env,
-          ...env(),
-        },
+        env: env(),
         windowsHide: true,
       });
     });
@@ -760,12 +749,12 @@ describe('Run Commands', () => {
       expect(exec).toHaveBeenCalledTimes(2);
       expect(exec).toHaveBeenNthCalledWith(1, `echo 'Hello World'`, {
         maxBuffer: LARGE_BUFFER,
-        env: { ...process.env, FORCE_COLOR: `true`, ...env() },
+        env: { FORCE_COLOR: `true`, ...env() },
         windowsHide: true,
       });
       expect(exec).toHaveBeenNthCalledWith(2, `echo 'Hello Universe'`, {
         maxBuffer: LARGE_BUFFER,
-        env: { ...process.env, FORCE_COLOR: `true`, ...env() },
+        env: { FORCE_COLOR: `true`, ...env() },
         windowsHide: true,
       });
     });

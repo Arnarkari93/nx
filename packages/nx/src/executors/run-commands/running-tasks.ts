@@ -1,6 +1,6 @@
 import * as pc from 'picocolors';
 import { ChildProcess, exec, Serializable } from 'child_process';
-import { env as appendLocalEnv } from 'npm-run-path';
+import { getEnvWithLocalBinPaths } from '../../utils/env-with-local-bin-paths';
 import { isAbsolute, join } from 'path';
 import treeKill from 'tree-kill';
 import { ExecutorContext } from '../../config/misc-interfaces';
@@ -629,22 +629,18 @@ function processEnv(
   envOptionFromExecutor: Record<string, string>,
   envFile?: string
 ) {
-  let localEnv = appendLocalEnv({ cwd: cwd ?? process.cwd() });
-  localEnv = {
-    ...process.env,
-    ...localEnv,
-  };
+  const env = getEnvWithLocalBinPaths(cwd);
 
   if (process.env.NX_LOAD_DOT_ENV_FILES !== 'false' && envFile) {
-    loadEnvVarsFile(envFile, localEnv);
+    loadEnvVarsFile(envFile, env);
   }
   let res: Record<string, string> = {
-    ...localEnv,
+    ...env,
     ...envOptionFromExecutor,
   };
   // need to override PATH to make sure we are using the local node_modules
-  if (localEnv.PATH) res.PATH = localEnv.PATH; // UNIX-like
-  if (localEnv.Path) res.Path = localEnv.Path; // Windows
+  if (env.PATH) res.PATH = env.PATH; // UNIX-like
+  if (env.Path) res.Path = env.Path; // Windows
 
   if (color) {
     res.FORCE_COLOR = `${color}`;
